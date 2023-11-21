@@ -1,31 +1,18 @@
 import { useState } from "react";
 import Header from "./components/Header";
-import ProjectList from "./components/ProjectList";
-import ProjectForm from "./components/ProjectForm";
-import projects from "./projects";
-
-// ✅ 1. Use inverse data flow to implement Light-Dark mode
-// ✅ 1a. Move the dark mode button to `Header`
-// ✅ 1b. Create a callback function that updates `isDarkMode` and pass the callback function as a prop to the `Header` component
+import ProjectsContainer from "./components/projects/ProjectsContainer";
 
 function App() {
 	const [darkMode, setDarkMode] = useState(true);
-
-	// ✅ 2b. Write a callback function inside the App component:
-	// ✅ - pass the callback function down as a prop to `ProjectList`
-
-	const handleClick = () => {
+	const toggleDarkMode = () => {
 		setDarkMode((prevDarkMode) => !prevDarkMode);
 	};
+	
 
 	return (
 		<div className={darkMode ? "App" : "App light"}>
-			<Header />
-			<button onClick={handleClick}>
-				{darkMode ? "Light Mode" : "Dark Mode"}
-			</button>
-			<ProjectForm />
-			<ProjectList projects={projects} />
+			<Header darkMode={darkMode} toggleDarkMode={toggleDarkMode}/>
+			<ProjectsContainer/>
 		</div>
 	);
 }
