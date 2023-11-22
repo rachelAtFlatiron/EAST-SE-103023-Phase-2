@@ -1,6 +1,7 @@
 import { useState } from "react";
+const projectsUrl = "http://localhost:4000/projects"
 
-function ProjectForm({ addProject }) {
+function ProjectForm({ onAdd, addProject }) {
 	const formOutline = {
 		name: "",
 		about: "",
@@ -22,9 +23,32 @@ function ProjectForm({ addProject }) {
 	//✅ 2. Persist the new project upon the ProjectForm submission
 	const handleSubmit = (e) => {
 		e.preventDefault();
+
+
 		//✅ 2a. Send the new project data to the server using a POST fetch request
-		addProject({...form, phase: parseInt(form.phase)}); 
-		setForm(formOutline)
+		const newProject = {...form, phase: parseInt(form.phase)}
+
+		fetch(projectsUrl,{
+			method: "POST",
+			body: JSON.stringify(newProject),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8"
+			}
+		})
+		.then(r=>r.json())
+		.then(serverProject => {
+			//pessimistically render
+			//this simply re-renders old projects (from prev fetch)
+			// with the new project appended to the end.
+			addProject(serverProject); 
+			
+			//trigger a re-fetch of all projects
+			// onAdd()
+
+			//clear the form
+			setForm(formOutline)
+		})
+
 	};
 
 	
